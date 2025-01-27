@@ -16,7 +16,7 @@ A dynamic and interactive Inventory Management web application built using React
 
 # Installation
 
-      $ git clone https://github.com/zed-kira/Inventory-management-platform.git
+      $ git clone https://github.com/Godfrey-Mbugua/React-Inventory-management-platform.git
       $ cd Inventory-management-platform
       $ cd frontend
       $ npm install 
