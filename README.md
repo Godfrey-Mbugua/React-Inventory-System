@@ -24,4 +24,4 @@ A dynamic and interactive Inventory Management web application built using React
       
       
 # License
-MIT © Zedkira
+MIT © Mbugua
