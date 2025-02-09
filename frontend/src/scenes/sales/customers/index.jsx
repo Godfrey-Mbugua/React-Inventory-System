@@ -1,8 +1,7 @@
-
-// MUI Components
+// Material UI
+import { Button, Modal, TextField, Box, Typography, Avatar } from '@mui/material';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,13 +9,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
+
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import Avatar from '@mui/material/Avatar';
-import { Button } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 
 import { useState } from "react";
@@ -218,10 +215,16 @@ const Customers = (props) => {
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const [ data, setData] = useState(customers);
+    const [open, setOpen] = useState(false); // State for modal visibility
 
+   
     const handleNew = () => {
-
+        setOpen(true); //Open Modal
     }
+
+    const handleClose = () => {
+        setOpen(false); // Close Modal
+    };
 
     const handleEdit = (row) => {
 
@@ -396,7 +399,73 @@ const Customers = (props) => {
                     </div>
                     </div>
                 </div>
-
+{/*  --------Implement Modal---------- */}
+<Modal
+    open={open}
+    onClose={handleClose}
+    aria-labelledby="modal-modal-title"
+    aria-describedby="modal-modal-description"
+>
+    <Box sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    }}>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+            Create New Customer
+        </Typography>
+        <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Name"
+            type="text"
+            fullWidth
+            variant="standard"
+        />
+        <TextField
+            margin="dense"
+            id="email address"
+            label="Email Address"
+            type="text"
+            fullWidth
+            variant="standard"
+        />
+        <TextField
+            margin="dense"
+            id="region"
+            label="Region"
+            type="text"
+            fullWidth
+            variant="standard"
+        />
+        <TextField
+            margin="dense"
+            id="order"
+            label="Orders"
+            type="number"
+            fullWidth
+            variant="standard"
+        />
+        <TextField
+            margin="dense"
+            id="spent"
+            label="Spent"
+            type="text"
+            fullWidth
+            variant="standard"
+        />
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose}>Save</Button>
+    </Box>
+</Modal>
+{/*  --------End Modal---------- */}
                 <div className="container customers-insights" style={{ marginTop: 50 }}>
                     <ColGrid numColsMd={ 2 } numColsLg={ 3 } marginTop="mt-6" gapX="gap-x-6" gapY="gap-y-6">
                     { insights.map((item) => (

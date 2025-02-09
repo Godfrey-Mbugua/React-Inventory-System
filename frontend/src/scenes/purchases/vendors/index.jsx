@@ -1,8 +1,7 @@
 // Material UI
-import { Button } from '@mui/material';
+import { Button, Modal, TextField, Box, Typography, Avatar } from '@mui/material';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,12 +9,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
+
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import Avatar from '@mui/material/Avatar';
+
 
 // Handling Dates
 import { format } from 'fecha';
@@ -283,6 +282,7 @@ const Vendors = () => {
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const [ data, setData ] = useState(vendors);
+    const [open, setOpen] = useState(false); // State for modal visibility
     
     const calc_payables = () => {
         let sum = 0;
@@ -293,8 +293,12 @@ const Vendors = () => {
     }
 
     const handleNew = () => {
-
+        setOpen(true); //Open Modal
     }
+
+    const handleClose = () => {
+        setOpen(false); // Close Modal
+    };
 
     const handleEdit = (row) => {
 
@@ -392,89 +396,155 @@ const Vendors = () => {
     return (
         <>
 
-            <section>
+<section>
+    <div className="container vendors-header" style={{ marginTop: 50 }}>
+        <div className="row">
+            <div className="col">
+                <h1>Vendors</h1>
+            </div>
+            <div className="col text-sm-start text-md-end text-lg-end text-xl-end text-xxl-end">
+                <Button 
+                    onClick={handleNew}
+                    variant="contained" 
+                    startIcon={<AddIcon />}
+                    /* style={{
+                        marginTop: 5,
+                    }} */
+                >
+                    New Vendor
+                </Button>
+            </div>
+        </div>
+    </div>
 
-                <div className="container vendors-header" style={{ marginTop: 50 }}>
-                    <div className="row">
-                        <div className="col">
-                            <h1>Vendors</h1>
-                        </div>
-                        <div className="col text-sm-start text-md-end text-lg-end text-xl-end text-xxl-end">
-                            <Button 
-                                onClick={handleNew}
-                                variant="contained" 
-                                startIcon={<AddIcon />}
-                                /* style={{
-                                    marginTop: 5,
-                                }} */
-                            >
-                                New Vendor
-                            </Button>
-                        </div>
-                    </div>
-                </div>
+    {/*  --------Implement Modal---------- */}
+<Modal
+    open={open}
+    onClose={handleClose}
+    aria-labelledby="modal-modal-title"
+    aria-describedby="modal-modal-description"
+>
+    <Box sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    }}>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+            Create New Vendor
+        </Typography>
+        <TextField
+            autoFocus
+            margin="dense"
+            id="id"
+            label="ID"
+            type="text"
+            fullWidth
+            variant="standard"
+        />
+        <TextField
+            margin="dense"
+            id="contact"
+            label="Contact Name"
+            type="text"
+            fullWidth
+            variant="standard"
+        />
+        <TextField
+            margin="dense"
+            id="company"
+            label="Company"
+            type="text"
+            fullWidth
+            variant="standard"
+        />
+        <TextField
+            margin="dense"
+            id="payables"
+            label="Payables"
+            type="number"
+            fullWidth
+            variant="standard"
+        />
+        <TextField
+            margin="dense"
+            id="terms"
+            label="Payment Terms"
+            type="text"
+            fullWidth
+            variant="standard"
+        />
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose}>Save</Button>
+    </Box>
+</Modal>
+{/*  --------End Modal---------- */}
 
-
-                <div className="container vendors-insights" style={{ marginTop: 20 }}>
-                    <div className="row">
-                        <div className="col-xxl-8 offset-xxl-0">
-                            <ColGrid numColsMd={ 2 } numColsLg={ 2 } marginTop="mt-6" gapX="gap-x-6" gapY="gap-y-6">
-                                <Card maxWidth="max-w-lg" decoration="left" decorationColor="blue">
-                                    <Flex>
-                                        <Block>
-                                            <Text>Vendors</Text>
-                                            <Metric>{data.length}</Metric>
-                                        </Block>
-                                        <BadgeDelta deltaType="increase" text="20%" />
-                                    </Flex>
-                                </Card>
-                                <Card maxWidth="max-w-lg" decoration="left" decorationColor="blue">
-                                    <Flex>
-                                        <Block>
-                                            <Text>Payables</Text>
-                                            <Metric>{valueFormatter(calc_payables())}</Metric>
-                                        </Block>
-                                        <BadgeDelta deltaType="decrease" text="7%" />
-                                    </Flex>
-                                </Card>
-                            </ColGrid>
-                            <Card marginTop='mt-4'>
-                                <Title>Payables</Title>
-                                <LineChart
-                                    data={payables}
-                                    dataKey="date"
-                                    categories={["payables"]}
-                                    colors={["blue"]}
-                                    valueFormatter={valueFormatter}  
-                                    marginTop="mt-6"         
-                                    yAxisWidth="w-12"
-                                />
-                            </Card>
-                        </div>
-                        <div className="col">
-                            <Card marginTop='mt-7'>
-                                <Title>Supplies Breakdown</Title>
-                                {supplies.map(supply => {
-                                    return (
-                                        <Block key={supply.id} spaceY="space-y-6" marginTop='mt-6'>
-                                            <Flex justifyContent="justify-start" spaceX="space-x-4" truncate={ true }>
-                                                {/* <Icon variant="light" icon={supply.icon} size="md" color={supply.color} /> */}
-                                                <Avatar alt={supply.title} src={supply.image} />
-                                                <Block truncate={ true }>
-                                                    <Text truncate={ true }><Bold>{supply.title}</Bold></Text>
-                                                    <Text truncate={ true }>{supply.company}</Text>
-                                                </Block>
-                                                <div>
-                                                    <Text color='red'>- {valueFormatter(supply.amount)}</Text>
-                                                </div>
-                                            </Flex>
-                                        </Block>
-                                    );
-                                })}
-                            </Card>
-                        </div>
-                    </div>
-                </div>
+    <div className="container vendors-insights" style={{ marginTop: 20 }}>
+        <div className="row">
+            <div className="col-xxl-8 offset-xxl-0">
+                <ColGrid numColsMd={ 2 } numColsLg={ 2 } marginTop="mt-6" gapX="gap-x-6" gapY="gap-y-6">
+                    <Card maxWidth="max-w-lg" decoration="left" decorationColor="blue">
+                        <Flex>
+                            <Block>
+                                <Text>Vendors</Text>
+                                <Metric>{data.length}</Metric>
+                            </Block>
+                            <BadgeDelta deltaType="increase" text="20%" />
+                        </Flex>
+                    </Card>
+                    <Card maxWidth="max-w-lg" decoration="left" decorationColor="blue">
+                        <Flex>
+                            <Block>
+                                <Text>Payables</Text>
+                                <Metric>{valueFormatter(calc_payables())}</Metric>
+                            </Block>
+                            <BadgeDelta deltaType="decrease" text="7%" />
+                        </Flex>
+                    </Card>
+                </ColGrid>
+                <Card marginTop='mt-4'>
+                    <Title>Payables</Title>
+                    <LineChart
+                        data={payables}
+                        dataKey="date"
+                        categories={["payables"]}
+                        colors={["blue"]}
+                        valueFormatter={valueFormatter}  
+                        marginTop="mt-6"         
+                        yAxisWidth="w-12"
+                    />
+                </Card>
+            </div>
+            <div className="col">
+                <Card marginTop='mt-7'>
+                    <Title>Supplies Breakdown</Title>
+                    {supplies.map(supply => {
+                        return (
+                            <Block key={supply.id} spaceY="space-y-6" marginTop='mt-6'>
+                                <Flex justifyContent="justify-start" spaceX="space-x-4" truncate={ true }>
+                                    {/* <Icon variant="light" icon={supply.icon} size="md" color={supply.color} /> */}
+                                    <Avatar alt={supply.title} src={supply.image} />
+                                    <Block truncate={ true }>
+                                        <Text truncate={ true }><Bold>{supply.title}</Bold></Text>
+                                        <Text truncate={ true }>{supply.company}</Text>
+                                    </Block>
+                                    <div>
+                                        <Text color='red'>- {valueFormatter(supply.amount)}</Text>
+                                    </div>
+                                </Flex>
+                            </Block>
+                        );
+                    })}
+                </Card>
+            </div>
+        </div>
+        </div>
 
 
                 <div className='container vendors-table' style={{ marginTop: 50, marginBottom: 50 }}>
